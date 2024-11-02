@@ -1,5 +1,5 @@
 {
-  "name": "timecalc",
+  "name": "@reggi/timecalc",
   "version": "1.0.0",
   "type": "module",
   "exports": {
@@ -44,5 +44,6 @@
     "sort-package-json": "^2.10.1",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
-  }
+  },
+  "public": true
 }
