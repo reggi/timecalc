@@ -1,6 +1,10 @@
 {
   "name": "@reggi/timecalc",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reggi/timecalc"
+  },
   "type": "module",
   "exports": {
     ".": {
