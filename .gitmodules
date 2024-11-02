@@ -1,0 +1,6 @@
+[submodule "data-source/city-timezones"]
+	path = data-source/city-timezones
+	url = https://github.com/kevinroberts/city-timezones
+[submodule "data-source/airport-data-js"]
+	path = data-source/airport-data-js
+	url = https://github.com/aashishvanand/airport-data-js
