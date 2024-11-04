@@ -1,10 +1,13 @@
 import {DateTime} from 'luxon'
+import ms from 'ms'
 
 const fixUnit = (alias: string[], divisor: number) => ({alias, divisor})
 
+const year = 1000 * 60 * 60 * 24 * 365.25
+
 export const units = {
-  year: fixUnit(['y', 'year', 'years'], 1000 * 60 * 60 * 24 * 365),
-  month: fixUnit(['mth', 'mths', 'month', 'months'], 1000 * 60 * 60 * 24 * 30),
+  year: fixUnit(['y', 'year', 'years'], 1000 * 60 * 60 * 24 * 365.25), // Adjusted for leap year
+  month: fixUnit(['mo', 'mth', 'mths', 'month', 'months'], year / 12), // Average month length considering leap years
   week: fixUnit(['w', 'week', 'weeks'], 1000 * 60 * 60 * 24 * 7),
   day: fixUnit(['d', 'day', 'days'], 1000 * 60 * 60 * 24),
   hour: fixUnit(['h', 'hour', 'hours'], 1000 * 60 * 60),
@@ -102,7 +105,8 @@ function unixToReadable(results, timezone) {
   return `${date.toLocaleString(DateTime.DATETIME_MED)} (${date.zoneName})`
 }
 
-export function formatResolveDate(value: number, tags: string[] = [], timezone?: string): string {
+export function formatResolveDate(value: number, tags: string[] | string = [], timezone?: string): string {
+  tags = Array.isArray(tags) ? tags : [tags]
   const tag = resolveAliasTags(tags)
   if (!tag && value >= units.year.divisor * 30) {
     return unixToReadable(value, timezone)

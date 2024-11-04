@@ -117,7 +117,7 @@ function evaluateExpression(expression, transform = parseNumber) {
 }
 
 // src/parser.ts
-var import_luxon2 = require("luxon");
+var import_luxon3 = require("luxon");
 
 // data/merge.json
 var merge_default = {
@@ -7876,7 +7876,7 @@ var merge_default = {
   adq: "America/Anchorage",
   adr: "America/New_York",
   ads: "America/Chicago",
-  adt: "America/Chicago",
+  adt: "UTC-03:00",
   adu: "Asia/Tehran",
   adw: "America/New_York",
   adx: "Europe/London",
@@ -8032,7 +8032,7 @@ var merge_default = {
   amp: "Indian/Antananarivo",
   amq: "Asia/Jayapura",
   ams: "Europe/Amsterdam",
-  amt: "Australia/Adelaide",
+  amt: "UTC+01:35",
   amu: "Pacific/Port_Moresby",
   amv: "Europe/Moscow",
   amw: "America/Chicago",
@@ -8147,7 +8147,7 @@ var merge_default = {
   asq: "America/Los_Angeles",
   asr: "Europe/Istanbul",
   ass: "Africa/Johannesburg",
-  ast: "UTC-04:00",
+  ast: "America/Los_Angeles",
   asu: "America/Asuncion",
   asv: "Africa/Nairobi",
   asw: "Africa/Cairo",
@@ -8346,7 +8346,7 @@ var merge_default = {
   bdq: "Asia/Kolkata",
   bdr: "America/New_York",
   bds: "Europe/Rome",
-  bdt: "Africa/Kinshasa",
+  bdt: "UTC-10:00",
   bdu: "Europe/Oslo",
   bdv: "Africa/Lubumbashi",
   bdw: "Australia/Perth",
@@ -8553,7 +8553,7 @@ var merge_default = {
   bmp: "Australia/Brisbane",
   bmq: "Africa/Nairobi",
   bmr: "Europe/Berlin",
-  bmt: "America/Chicago",
+  bmt: "UTC+00:18",
   bmu: "Asia/Makassar",
   bmv: "Asia/Ho_Chi_Minh",
   bmw: "Africa/Algiers",
@@ -8913,7 +8913,7 @@ var merge_default = {
   cdq: "Australia/Brisbane",
   cdr: "America/Denver",
   cds: "America/Chicago",
-  cdt: "Europe/Madrid",
+  cdt: "UTC-05:00",
   cdu: "Australia/Sydney",
   cdv: "America/Anchorage",
   cdw: "America/New_York",
@@ -9167,7 +9167,7 @@ var merge_default = {
   cpq: "America/Sao_Paulo",
   cpr: "America/Denver",
   cps: "America/Chicago",
-  cpt: "Africa/Johannesburg",
+  cpt: "UTC-05:00",
   cpu: "America/Fortaleza",
   cpv: "America/Fortaleza",
   cpx: "America/Puerto_Rico",
@@ -9283,7 +9283,7 @@ var merge_default = {
   cwl: "Europe/London",
   cwr: "Australia/Adelaide",
   cws: "America/Los_Angeles",
-  cwt: "Australia/Sydney",
+  cwt: "UTC-05:00",
   cww: "Australia/Sydney",
   cwx: "America/Phoenix",
   cxa: "America/Caracas",
@@ -9473,7 +9473,7 @@ var merge_default = {
   dmm: "Asia/Riyadh",
   dmn: "America/Denver",
   dmo: "America/Chicago",
-  dmt: "America/Cuiaba",
+  dmt: "UTC-00:25",
   dmu: "Asia/Kolkata",
   dna: "Asia/Tokyo",
   dnb: "Australia/Brisbane",
@@ -9720,7 +9720,7 @@ var merge_default = {
   emo: "Pacific/Port_Moresby",
   emp: "America/Chicago",
   ems: "Pacific/Port_Moresby",
-  emt: "America/Los_Angeles",
+  emt: "UTC-07:17",
   emx: "America/Argentina/Catamarca",
   ena: "America/Anchorage",
   enb: "Australia/Perth",
@@ -9750,7 +9750,7 @@ var merge_default = {
   eph: "America/Los_Angeles",
   epl: "Europe/Paris",
   epr: "Australia/Perth",
-  ept: "Pacific/Port_Moresby",
+  ept: "UTC-04:00",
   epu: "Europe/Tallinn",
   eqs: "America/Argentina/Catamarca",
   era: "Africa/Mogadishu",
@@ -10102,7 +10102,7 @@ var merge_default = {
   gdp: "America/Fortaleza",
   gdq: "Africa/Addis_Ababa",
   gdr: "America/Sao_Paulo",
-  gdt: "America/Grand_Turk",
+  gdt: "UTC+11:00",
   gdv: "America/Denver",
   gdw: "America/Detroit",
   gdx: "Asia/Magadan",
@@ -10299,7 +10299,7 @@ var merge_default = {
   gsq: "Africa/Cairo",
   gsr: "Africa/Mogadishu",
   gss: "Africa/Johannesburg",
-  gst: "America/Juneau",
+  gst: "UTC+10:00",
   gsu: "Africa/Khartoum",
   gta: "Pacific/Guadalcanal",
   gte: "Australia/Darwin",
@@ -10526,7 +10526,7 @@ var merge_default = {
   hmn: "America/Denver",
   hmo: "America/Hermosillo",
   hmr: "Europe/Oslo",
-  hmt: "America/Los_Angeles",
+  hmt: "UTC+01:40",
   hmv: "Europe/Stockholm",
   hmy: "Asia/Seoul",
   hna: "Asia/Tokyo",
@@ -10565,7 +10565,7 @@ var merge_default = {
   hpg: "Asia/Shanghai",
   hph: "Asia/Ho_Chi_Minh",
   hpn: "America/New_York",
-  hpt: "America/Chicago",
+  hpt: "UTC-09:30",
   hpv: "Pacific/Honolulu",
   hpy: "America/Chicago",
   hqm: "America/Los_Angeles",
@@ -10776,7 +10776,7 @@ var merge_default = {
   imo: "Africa/Bangui",
   imp: "America/Fortaleza",
   imq: "Asia/Tehran",
-  imt: "America/Menominee",
+  imt: "UTC+01:57",
   ina: "Europe/Moscow",
   inb: "America/Belize",
   inc: "Asia/Shanghai",
@@ -10849,7 +10849,7 @@ var merge_default = {
   isp: "America/New_York",
   isq: "America/Detroit",
   iss: "America/New_York",
-  ist: "UTC+02:00",
+  ist: "Europe/Istanbul",
   isu: "Asia/Baghdad",
   isw: "America/Chicago",
   itb: "America/Santarem",
@@ -11145,7 +11145,7 @@ var merge_default = {
   kdp: "Pacific/Port_Moresby",
   kdq: "Pacific/Port_Moresby",
   kdr: "Pacific/Port_Moresby",
-  kdt: "Asia/Bangkok",
+  kdt: "UTC+10:00",
   kdu: "Asia/Karachi",
   kdv: "Pacific/Fiji",
   kdx: "Africa/Khartoum",
@@ -11828,7 +11828,7 @@ var merge_default = {
   lsp: "America/Caracas",
   lsq: "America/Santiago",
   lss: "America/Guadeloupe",
-  lst: "Australia/Hobart",
+  lst: "UTC+02:37",
   lsu: "Asia/Kuching",
   lsv: "America/Los_Angeles",
   lsw: "Asia/Jakarta",
@@ -12018,7 +12018,7 @@ var merge_default = {
   mdp: "Asia/Jayapura",
   mdq: "America/Argentina/Buenos_Aires",
   mds: "America/Grand_Turk",
-  mdt: "America/New_York",
+  mdt: "UTC-06:00",
   mdu: "Pacific/Port_Moresby",
   mdw: "America/Chicago",
   mdx: "America/Argentina/Cordoba",
@@ -12263,7 +12263,7 @@ var merge_default = {
   mpm: "Africa/Maputo",
   mpn: "Atlantic/Stanley",
   mpo: "America/New_York",
-  mpt: "Asia/Dili",
+  mpt: "UTC-06:00",
   mpu: "Pacific/Port_Moresby",
   mpv: "America/New_York",
   mpw: "Europe/Kiev",
@@ -12329,7 +12329,7 @@ var merge_default = {
   msq: "Europe/Minsk",
   msr: "Europe/Istanbul",
   mss: "America/New_York",
-  mst: "UTC-07:00",
+  mst: "Europe/Amsterdam",
   msu: "Africa/Maseru",
   msv: "America/New_York",
   msw: "Africa/Asmara",
@@ -12416,7 +12416,7 @@ var merge_default = {
   mwn: "Africa/Dar_es_Salaam",
   mwo: "America/New_York",
   mwq: "Asia/Rangoon",
-  mwt: "Australia/Adelaide",
+  mwt: "UTC-06:00",
   mwv: "Asia/Phnom_Penh",
   mwx: "Asia/Seoul",
   mwy: "Australia/Brisbane",
@@ -12707,7 +12707,7 @@ var merge_default = {
   nsn: "Pacific/Auckland",
   nso: "Australia/Sydney",
   nsr: "America/Fortaleza",
-  nst: "UTC-03:30",
+  nst: "Asia/Bangkok",
   nsv: "Australia/Brisbane",
   nsy: "Europe/Rome",
   ntb: "Europe/Oslo",
@@ -13109,7 +13109,7 @@ var merge_default = {
   pdo: "Asia/Jakarta",
   pdp: "America/Montevideo",
   pds: "America/Matamoros",
-  pdt: "America/Los_Angeles",
+  pdt: "UTC-07:00",
   pdu: "America/Montevideo",
   pdv: "Europe/Sofia",
   pdx: "America/Los_Angeles",
@@ -13326,7 +13326,7 @@ var merge_default = {
   ppq: "Pacific/Auckland",
   ppr: "Asia/Jakarta",
   pps: "Asia/Manila",
-  ppt: "Pacific/Tahiti",
+  ppt: "UTC-07:00",
   ppu: "Asia/Rangoon",
   ppv: "America/Anchorage",
   ppw: "Europe/London",
@@ -13447,7 +13447,7 @@ var merge_default = {
   pwo: "Africa/Lubumbashi",
   pwq: "Asia/Almaty",
   pwr: "America/Anchorage",
-  pwt: "America/Los_Angeles",
+  pwt: "UTC-07:00",
   pwy: "America/Denver",
   pxa: "Asia/Jakarta",
   pxh: "Australia/Adelaide",
@@ -14084,7 +14084,7 @@ var merge_default = {
   smq: "Asia/Pontianak",
   smr: "America/Bogota",
   sms: "Indian/Antananarivo",
-  smt: "Asia/Taipei",
+  smt: "UTC+06:55",
   smu: "America/Anchorage",
   smv: "Europe/Zurich",
   smw: "Africa/Casablanca",
@@ -14630,7 +14630,7 @@ var merge_default = {
   tmq: "Africa/Ouagadougou",
   tmr: "Africa/Algiers",
   tms: "Africa/Sao_Tome",
-  tmt: "America/Santarem",
+  tmt: "UTC+03:26",
   tmu: "America/Costa_Rica",
   tmw: "Australia/Sydney",
   tmx: "Africa/Algiers",
@@ -15291,7 +15291,7 @@ var merge_default = {
   wmo: "America/Anchorage",
   wmp: "Indian/Antananarivo",
   wmr: "Indian/Antananarivo",
-  wmt: "Asia/Shanghai",
+  wmt: "UTC+01:24",
   wmx: "Asia/Jayapura",
   wna: "America/Anchorage",
   wnd: "Australia/Perth",
@@ -15538,7 +15538,7 @@ var merge_default = {
   ydo: "America/Montreal",
   ydp: "America/Goose_Bay",
   ydq: "America/Dawson_Creek",
-  ydt: "America/Vancouver",
+  ydt: "UTC-08:00",
   ydu: "America/Yellowknife",
   ydv: "America/Winnipeg",
   ydw: "America/Yellowknife",
@@ -15726,7 +15726,7 @@ var merge_default = {
   ypq: "America/Toronto",
   ypr: "America/Vancouver",
   yps: "America/Halifax",
-  ypt: "America/Vancouver",
+  ypt: "UTC-08:00",
   ypw: "America/Vancouver",
   ypx: "America/Montreal",
   ypy: "America/Edmonton",
@@ -15784,7 +15784,7 @@ var merge_default = {
   ysp: "America/Toronto",
   ysq: "America/Vancouver",
   ysr: "America/Iqaluit",
-  yst: "America/Winnipeg",
+  yst: "UTC-09:00",
   ysu: "America/Halifax",
   ysx: "America/Vancouver",
   ysy: "America/Yellowknife",
@@ -16001,20 +16001,62 @@ var merge_default = {
   zzo: "Asia/Sakhalin",
   zzu: "Africa/Blantyre",
   zzv: "America/New_York",
+  west: "UTC+01:00",
+  cest: "UTC+02:00",
   eet: "UTC+02:00",
+  eest: "UTC+03:00",
   sast: "UTC+02:00",
+  cast: "UTC+03:00",
+  wast: "UTC+02:00",
+  ahst: "UTC-10:00",
+  ahdt: "UTC-09:00",
   akst: "UTC-09:00",
-  aedt: "UTC+11:00",
-  nzdt: "UTC+13:00",
-  pkt: "UTC+05:00",
-  wita: "UTC+08:00",
-  acdt: "UTC+10:30",
+  akdt: "UTC-08:00",
+  edt: "UTC-04:00",
+  sjmt: "UTC-05:36",
+  ywt: "UTC-08:00",
+  yddt: "UTC-07:00",
+  ewt: "UTC-04:00",
+  ndt: "UTC-02:30",
+  addt: "UTC-02:00",
+  qmt: "UTC-05:14",
+  ffmt: "UTC-04:04",
+  ppmt: "UTC-04:49",
+  sdmt: "UTC-04:40",
+  nddt: "UTC-01:30",
+  pmmt: "UTC+09:49",
   aest: "UTC+10:00",
+  aedt: "UTC+11:00",
+  nzmt: "UTC+11:30",
+  nzst: "UTC+12:00",
+  nzdt: "UTC+13:00",
+  cemt: "UTC+03:00",
+  idt: "UTC+03:00",
+  plmt: "UTC+07:07",
+  hkst: "UTC+09:00",
+  hkwt: "UTC+08:30",
+  jmt: "UTC+02:21",
+  iddt: "UTC+04:00",
+  pkt: "UTC+05:00",
+  pkst: "UTC+06:00",
+  wita: "UTC+08:00",
+  tbmt: "UTC+02:59",
+  jdt: "UTC+10:00",
+  fmt: "UTC-01:08",
   acst: "UTC+09:30",
+  acdt: "UTC+10:30",
   awst: "UTC+08:00",
+  awdt: "UTC+09:00",
   pst: "UTC-08:00",
+  bdst: "UTC+02:00",
+  cmt: "UTC+01:55",
   msk: "UTC+03:00",
-  chst: "UTC+10:00"
+  msd: "UTC+04:00",
+  wemt: "UTC+02:00",
+  mdst: "UTC+04:31",
+  hwt: "UTC-09:30",
+  chst: "UTC+10:00",
+  hdt: "UTC-09:30"
 };
 
 // src/timezone.ts
@@ -16053,107 +16095,18 @@ var parseTimezone = parseTimezoneV3;
 // src/parser-handlers.ts
 var import_ms = __toESM(require("ms"), 1);
 var chrono = __toESM(require("chrono-node"), 1);
-var import_luxon = require("luxon");
+var import_luxon2 = require("luxon");
 var import_words_to_numbers = __toESM(require("words-to-numbers"), 1);
-function handleNow(v, runtime) {
-  if (v === "now") {
-    return runtime;
-  }
-  throw new Error("Invalid now input");
-}
-function handleChrono(v) {
-  const value = chrono.parseDate(v);
-  if (value) {
-    return import_luxon.DateTime.fromJSDate(value);
-  }
-  throw new Error("Invalid chrono input");
-}
-function handleMs(value) {
-  const v = (0, import_ms.default)(value);
-  if (v) {
-    return v;
-  }
-  throw new Error("Invalid ms input");
-}
-function handleWords(value) {
-  const words = value.split(" ");
-  const id = words.pop();
-  const rest = words.join(" ");
-  const number = (0, import_words_to_numbers.default)(rest);
-  if (number) {
-    return handleMs(`${number} ${id}`);
-  }
-  throw new Error("Invalid words input");
-}
-var stack = [handleMs, handleNow, handleWords, handleChrono];
-
-// src/parser.ts
-function tryFunctionsUntilSuccess(functions) {
-  return (value, runtime = import_luxon2.DateTime.now()) => {
-    for (const func of functions) {
-      try {
-        return func(value, runtime);
-      } catch (error) {
-      }
-    }
-    throw new Error(`All functions failed ${value}`);
-  };
-}
-function formatDateTime({ timezone, format, input }) {
-  let parsedDateTime = import_luxon2.DateTime.fromFormat(input, format).setZone(timezone, { keepLocalTime: true });
-  if (!parsedDateTime.isValid) {
-    throw new Error("Invalid date format or input");
-  } else {
-    return parsedDateTime;
-  }
-}
-function parseTimeWithTimezone(format) {
-  return (input, runtime) => {
-    const { value, timezone } = parseTimezone(input);
-    if (value === "" && timezone) {
-      return runtime.setZone(timezone, { keepLocalTime: true });
-    }
-    return formatDateTime({ format, input: value, timezone });
-  };
-}
-var parseStringValue = tryFunctionsUntilSuccess([
-  parseTimeWithTimezone("h:mma"),
-  // 3:30pm
-  parseTimeWithTimezone("h:mm a"),
-  // 3:30 pm
-  parseTimeWithTimezone("h:mma z"),
-  // 3:30pm est
-  parseTimeWithTimezone("h:mm a z"),
-  // 3:30 pm est
-  parseTimeWithTimezone("h:mma zz"),
-  // 3:30pm est
-  parseTimeWithTimezone("h:mm a zz"),
-  // 3:30 pm est
-  parseTimeWithTimezone("ha"),
-  // 3pm
-  parseTimeWithTimezone("h a"),
-  // 3 pm
-  parseTimeWithTimezone("ha z"),
-  // 3pm est
-  parseTimeWithTimezone("h a z"),
-  // 3 pm est
-  parseTimeWithTimezone("z"),
-  //est
-  parseTimeWithTimezone("ha zz"),
-  // 3pm est
-  parseTimeWithTimezone("h a zz"),
-  // 3 pm est
-  parseTimeWithTimezone("zz"),
-  //est
-  ...stack
-]);
 
 // src/format-resolve.ts
-var import_luxon3 = require("luxon");
+var import_luxon = require("luxon");
 var fixUnit = (alias, divisor) => ({ alias, divisor });
+var year = 1e3 * 60 * 60 * 24 * 365.25;
 var units = {
-  year: fixUnit(["y", "year", "years"], 1e3 * 60 * 60 * 24 * 365),
-  month: fixUnit(["mth", "mths", "month", "months"], 1e3 * 60 * 60 * 24 * 30),
+  year: fixUnit(["y", "year", "years"], 1e3 * 60 * 60 * 24 * 365.25),
+  // Adjusted for leap year
+  month: fixUnit(["mo", "mth", "mths", "month", "months"], year / 12),
+  // Average month length considering leap years
   week: fixUnit(["w", "week", "weeks"], 1e3 * 60 * 60 * 24 * 7),
   day: fixUnit(["d", "day", "days"], 1e3 * 60 * 60 * 24),
   hour: fixUnit(["h", "hour", "hours"], 1e3 * 60 * 60),
@@ -16231,19 +16184,119 @@ function formatResolveHuman(value, unit) {
   return results.filter((r) => r.result !== 0).map((r) => [r.result, r.word].join(" ")).join(", ");
 }
 function unixToReadable(results, timezone) {
-  let date = import_luxon3.DateTime.fromMillis(results);
+  let date = import_luxon.DateTime.fromMillis(results);
   if (timezone) {
     date = date.setZone(timezone, { keepLocalTime: false });
   }
-  return `${date.toLocaleString(import_luxon3.DateTime.DATETIME_MED)} (${date.zoneName})`;
+  return `${date.toLocaleString(import_luxon.DateTime.DATETIME_MED)} (${date.zoneName})`;
 }
 function formatResolveDate(value, tags = [], timezone) {
+  tags = Array.isArray(tags) ? tags : [tags];
   const tag = resolveAliasTags(tags);
   if (!tag && value >= units.year.divisor * 30) {
     return unixToReadable(value, timezone);
   }
   return formatResolveHuman(value, tag);
 }
+
+// src/parser-handlers.ts
+function handleNow(v, runtime) {
+  if (v === "now") {
+    return runtime;
+  }
+  throw new Error("Invalid now input");
+}
+function handleChrono(v) {
+  const value = chrono.parseDate(v);
+  if (value) {
+    return import_luxon2.DateTime.fromJSDate(value);
+  }
+  throw new Error("Invalid chrono input");
+}
+function handleMs(value) {
+  const v = (0, import_ms.default)(value);
+  if (v) {
+    return v;
+  }
+  const monthRegex = /^(?:\d+\s*(?:mo|month|months|mths|mth))$/i;
+  if (monthRegex.test(value)) {
+    const number = parseInt(value, 10);
+    return number * units.month.divisor;
+  }
+  throw new Error("Invalid ms input");
+}
+function handleWords(value) {
+  const words = value.split(" ");
+  const id = words.pop();
+  const rest = words.join(" ");
+  const number = (0, import_words_to_numbers.default)(rest);
+  if (number) {
+    return handleMs(`${number} ${id}`);
+  }
+  throw new Error("Invalid words input");
+}
+var stack = [handleMs, handleNow, handleWords, handleChrono];
+
+// src/parser.ts
+function tryFunctionsUntilSuccess(functions) {
+  return (value, runtime = import_luxon3.DateTime.now()) => {
+    for (const func of functions) {
+      try {
+        return func(value, runtime);
+      } catch (error) {
+      }
+    }
+    throw new Error(`All functions failed ${value}`);
+  };
+}
+function formatDateTime({ timezone, format, input }) {
+  let parsedDateTime = import_luxon3.DateTime.fromFormat(input, format).setZone(timezone, { keepLocalTime: true });
+  if (!parsedDateTime.isValid) {
+    throw new Error("Invalid date format or input");
+  } else {
+    return parsedDateTime;
+  }
+}
+function parseTimeWithTimezone(format) {
+  return (input, runtime) => {
+    const { value, timezone } = parseTimezone(input);
+    if (value === "" && timezone) {
+      return runtime.setZone(timezone, { keepLocalTime: true });
+    }
+    return formatDateTime({ format, input: value, timezone });
+  };
+}
+var parseStringValue = tryFunctionsUntilSuccess([
+  parseTimeWithTimezone("h:mma"),
+  // 3:30pm
+  parseTimeWithTimezone("h:mm a"),
+  // 3:30 pm
+  parseTimeWithTimezone("h:mma z"),
+  // 3:30pm est
+  parseTimeWithTimezone("h:mm a z"),
+  // 3:30 pm est
+  parseTimeWithTimezone("h:mma zz"),
+  // 3:30pm est
+  parseTimeWithTimezone("h:mm a zz"),
+  // 3:30 pm est
+  parseTimeWithTimezone("ha"),
+  // 3pm
+  parseTimeWithTimezone("h a"),
+  // 3 pm
+  parseTimeWithTimezone("ha z"),
+  // 3pm est
+  parseTimeWithTimezone("h a z"),
+  // 3 pm est
+  parseTimeWithTimezone("z"),
+  //est
+  parseTimeWithTimezone("ha zz"),
+  // 3pm est
+  parseTimeWithTimezone("h a zz"),
+  // 3 pm est
+  parseTimeWithTimezone("zz"),
+  //est
+  ...stack
+]);
 
 // src/timecalc.ts
 var TimeCalc = class _TimeCalc {
@@ -16312,9 +16365,7 @@ var TimeCalc = class _TimeCalc {
 // src/index.ts
 function timecalc(timezone, expression) {
   try {
-    const pv = new TimeCalc(timezone);
-    const results = pv.evaluate(expression);
-    return { error: null, results };
+    return { error: null, results: TimeCalc.evaluate(timezone, expression) };
   } catch (e) {
     return { error: e.message, results: null };
   }
