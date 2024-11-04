@@ -16263,7 +16263,7 @@ function parseTimeWithTimezone(format) {
     if (value === "" && timezone) {
       return runtime.setZone(timezone, { keepLocalTime: true });
     }
-    return formatDateTime({ format, input: value, timezone });
+    return formatDateTime({ format, input: value, timezone: timezone || runtime.zoneName });
   };
 }
 var parseStringValue = tryFunctionsUntilSuccess([
