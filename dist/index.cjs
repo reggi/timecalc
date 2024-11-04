@@ -35,7 +35,7 @@ __export(src_exports, {
 module.exports = __toCommonJS(src_exports);
 
 // src/timecalc.ts
-var import_luxon3 = require("luxon");
+var import_luxon4 = require("luxon");
 
 // src/evaluate.ts
 var parseFraction = (input) => {
@@ -7876,7 +7876,7 @@ var merge_default = {
   adq: "America/Anchorage",
   adr: "America/New_York",
   ads: "America/Chicago",
-  adt: "UTC-03:00",
+  adt: "America/Chicago",
   adu: "Asia/Tehran",
   adw: "America/New_York",
   adx: "Europe/London",
@@ -8913,7 +8913,7 @@ var merge_default = {
   cdq: "Australia/Brisbane",
   cdr: "America/Denver",
   cds: "America/Chicago",
-  cdt: "UTC-05:00",
+  cdt: "Europe/Madrid",
   cdu: "Australia/Sydney",
   cdv: "America/Anchorage",
   cdw: "America/New_York",
@@ -9212,7 +9212,7 @@ var merge_default = {
   cso: "Europe/Berlin",
   csq: "America/Chicago",
   css: "America/Campo_Grande",
-  cst: "UTC+08:00",
+  cst: "UTC-06:00",
   csu: "America/Sao_Paulo",
   csv: "America/Chicago",
   csx: "Asia/Shanghai",
@@ -12018,7 +12018,7 @@ var merge_default = {
   mdp: "Asia/Jayapura",
   mdq: "America/Argentina/Buenos_Aires",
   mds: "America/Grand_Turk",
-  mdt: "UTC-06:00",
+  mdt: "America/New_York",
   mdu: "Pacific/Port_Moresby",
   mdw: "America/Chicago",
   mdx: "America/Argentina/Cordoba",
@@ -12707,7 +12707,7 @@ var merge_default = {
   nsn: "Pacific/Auckland",
   nso: "Australia/Sydney",
   nsr: "America/Fortaleza",
-  nst: "Asia/Bangkok",
+  nst: "UTC-03:30",
   nsv: "Australia/Brisbane",
   nsy: "Europe/Rome",
   ntb: "Europe/Oslo",
@@ -13109,7 +13109,7 @@ var merge_default = {
   pdo: "Asia/Jakarta",
   pdp: "America/Montevideo",
   pds: "America/Matamoros",
-  pdt: "UTC-07:00",
+  pdt: "America/Los_Angeles",
   pdu: "America/Montevideo",
   pdv: "Europe/Sofia",
   pdx: "America/Los_Angeles",
@@ -16003,19 +16003,16 @@ var merge_default = {
   zzv: "America/New_York",
   eet: "UTC+02:00",
   sast: "UTC+02:00",
-  hdt: "UTC-09:00",
-  akdt: "UTC-08:00",
-  edt: "UTC-04:00",
-  ndt: "UTC-02:30",
+  akst: "UTC-09:00",
   aedt: "UTC+11:00",
   nzdt: "UTC+13:00",
   pkt: "UTC+05:00",
   wita: "UTC+08:00",
-  pst: "UTC+08:00",
   acdt: "UTC+10:30",
   aest: "UTC+10:00",
   acst: "UTC+09:30",
   awst: "UTC+08:00",
+  pst: "UTC-08:00",
   msk: "UTC+03:00",
   chst: "UTC+10:00"
 };
@@ -16102,12 +16099,12 @@ function tryFunctionsUntilSuccess(functions) {
     throw new Error(`All functions failed ${value}`);
   };
 }
-function formatDateTime({ runtime, timezone, format, input }) {
-  let parsedDateTime = import_luxon2.DateTime.fromFormat(input, format).setZone(timezone);
-  if (parsedDateTime.isValid) {
-    return parsedDateTime.setZone(runtime.zone, { keepLocalTime: true });
-  } else {
+function formatDateTime({ timezone, format, input }) {
+  let parsedDateTime = import_luxon2.DateTime.fromFormat(input, format).setZone(timezone, { keepLocalTime: true });
+  if (!parsedDateTime.isValid) {
     throw new Error("Invalid date format or input");
+  } else {
+    return parsedDateTime;
   }
 }
 function parseTimeWithTimezone(format) {
@@ -16116,7 +16113,7 @@ function parseTimeWithTimezone(format) {
     if (value === "" && timezone) {
       return runtime.setZone(timezone, { keepLocalTime: true });
     }
-    return formatDateTime({ runtime, format, input: value, timezone });
+    return formatDateTime({ format, input: value, timezone });
   };
 }
 var parseStringValue = tryFunctionsUntilSuccess([
@@ -16151,48 +16148,145 @@ var parseStringValue = tryFunctionsUntilSuccess([
   ...stack
 ]);
 
+// src/format-resolve.ts
+var import_luxon3 = require("luxon");
+var fixUnit = (alias, divisor) => ({ alias, divisor });
+var units = {
+  year: fixUnit(["y", "year", "years"], 1e3 * 60 * 60 * 24 * 365),
+  month: fixUnit(["mth", "mths", "month", "months"], 1e3 * 60 * 60 * 24 * 30),
+  week: fixUnit(["w", "week", "weeks"], 1e3 * 60 * 60 * 24 * 7),
+  day: fixUnit(["d", "day", "days"], 1e3 * 60 * 60 * 24),
+  hour: fixUnit(["h", "hour", "hours"], 1e3 * 60 * 60),
+  minute: fixUnit(["m", "minute", "minutes"], 1e3 * 60),
+  second: fixUnit(["s", "second", "seconds"], 1e3),
+  millisecond: fixUnit(["ms", "millisecond", "milliseconds"], 1)
+};
+function pluralize(value, unit) {
+  const isSingular = value === 1;
+  const correctUnit = isSingular ? unit.replace(/s$/, "") : unit.endsWith("s") ? unit : unit + "s";
+  return correctUnit;
+}
+function resolveSignularAlias(unit) {
+  unit = unit.toLowerCase();
+  const unitChunks = unit.split(" ");
+  for (const unitOption in units) {
+    if (unitChunks.some((chunk) => units[unitOption].alias.map((alias) => alias.toLowerCase()).includes(chunk))) {
+      return unitOption;
+    }
+  }
+  throw new Error(`Unknown unit: ${unit}`);
+}
+function resolveAliasTags(tags) {
+  for (const unitOption in units) {
+    for (const tag of tags) {
+      try {
+        const candidateUnit = resolveSignularAlias(tag);
+        if (candidateUnit === unitOption) {
+          return candidateUnit;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+  }
+  return void 0;
+}
+function resolve(value, unit) {
+  const absValue = Math.abs(value);
+  if (unit && units[unit]) {
+    const divisor = units[unit].divisor;
+    const result = value / divisor;
+    const word = pluralize(result, unit);
+    return { result, word, divisor };
+  } else {
+    for (const unitOption in units) {
+      const divisor = units[unitOption].divisor;
+      if (absValue >= divisor) {
+        const result = value / divisor;
+        const word = pluralize(result, unitOption);
+        return { result, word, divisor };
+      }
+    }
+  }
+  return { result: value, word: "milliseconds", divisor: 1 };
+}
+function formatResolve(value, unit) {
+  let results = [];
+  let remainder = value;
+  do {
+    const resolved = resolve(remainder, unit);
+    const resultWithoutRemainder = Math.floor(resolved.result);
+    results.push({
+      result: resultWithoutRemainder,
+      word: pluralize(resultWithoutRemainder, resolved.word),
+      divisor: resolved.divisor
+    });
+    remainder = remainder % resolved.divisor;
+    unit = void 0;
+  } while (remainder > 0);
+  return results;
+}
+function formatResolveHuman(value, unit) {
+  const results = formatResolve(value, unit);
+  return results.filter((r) => r.result !== 0).map((r) => [r.result, r.word].join(" ")).join(", ");
+}
+function unixToReadable(results, timezone) {
+  let date = import_luxon3.DateTime.fromMillis(results);
+  if (timezone) {
+    date = date.setZone(timezone, { keepLocalTime: false });
+  }
+  return `${date.toLocaleString(import_luxon3.DateTime.DATETIME_MED)} (${date.zoneName})`;
+}
+function formatResolveDate(value, tags = [], timezone) {
+  const tag = resolveAliasTags(tags);
+  if (!tag && value >= units.year.divisor * 30) {
+    return unixToReadable(value, timezone);
+  }
+  return formatResolveHuman(value, tag);
+}
+
 // src/timecalc.ts
-var TimeCalc = class {
+var TimeCalc = class _TimeCalc {
   constructor(timezone, log) {
     this.timezone = timezone;
     this.log = log;
     this.parser = this.parser.bind(this);
-    this.relativity = import_luxon3.DateTime.now().setZone(timezone);
+    this.relativity = import_luxon4.DateTime.now().setZone(timezone);
   }
   hasDateTime = false;
   values = [];
-  inAs = [];
+  tags = [];
   // helps us know positions of the operands
   operandStack = [];
   relativity;
   /** handles each operand in the evaluation (must resolve to int) */
   parser(value) {
-    this.operandStack.push(value);
-    if (typeof value === "number") return value;
-    if (typeof value === "string" && (value.startsWith("in ") || value.startsWith("as "))) {
-      this.inAs.push(value);
-      return 0;
-    }
-    if (typeof value === "string") {
-      const result = parseStringValue(value.trim(), this.relativity);
-      if (import_luxon3.DateTime.isDateTime(result)) {
+    try {
+      this.operandStack.push(value);
+      if (typeof value === "number") return value;
+      let result = parseStringValue(value.trim(), this.relativity);
+      if (import_luxon4.DateTime.isDateTime(result)) {
         if (this.operandStack.length === 1 && result.zoneName) {
-          this.relativity = this.relativity.setZone(result.zoneName);
+          const ogzone = this.timezone;
+          this.timezone = result.zoneName;
+          result = result.setZone(ogzone, { keepLocalTime: false });
+          result = result.setZone(this.timezone, { keepLocalTime: false });
         }
         this.hasDateTime = true;
         return result.toMillis();
       }
       return result;
-    } else {
-      return value;
+    } catch (e) {
+      this.tags.push(value);
+      return 0;
     }
   }
   evaluate(value) {
     const e = evaluateExpression(value, this.parser);
     if (this.hasDateTime) {
-      if (this.inAs.length) {
-        const now = import_luxon3.DateTime.now();
-        const evaluated = import_luxon3.DateTime.fromMillis(e);
+      if (this.tags.length) {
+        const now = import_luxon4.DateTime.now();
+        const evaluated = import_luxon4.DateTime.fromMillis(e);
         const differenceInMilliseconds = evaluated.diff(now, "milliseconds").milliseconds;
         return this.resolveIn(differenceInMilliseconds);
       }
@@ -16200,53 +16294,18 @@ var TimeCalc = class {
     }
     return this.resolveIn(e);
   }
-  unixToReadable(results) {
-    const date = import_luxon3.DateTime.fromMillis(results).setZone(this.timezone);
-    return date.toLocaleString(import_luxon3.DateTime.DATETIME_MED);
+  resolveIn(e) {
+    return formatResolveDate(e, this.tags, this.timezone);
   }
-  resolveIn(value) {
-    const formatIfNeeded = (number) => {
-      return number % 1 !== 0 ? number.toFixed(2) : String(number);
+  static evaluate(timezone, expression) {
+    const pv = new _TimeCalc(timezone);
+    return pv.evaluate(expression);
+  }
+  static evaluateTimezone(timezone) {
+    return (expression) => {
+      const pv = new _TimeCalc(timezone);
+      return pv.evaluate(expression);
     };
-    const pluralize = (value2, unit) => {
-      const numFormatted = formatIfNeeded(value2);
-      return `${numFormatted} ${numFormatted === "1" ? unit.slice(0, -1) : unit}`;
-    };
-    if (this.inAs.includes("in years")) {
-      return pluralize(value / 1e3 / 60 / 60 / 24 / 365, "years");
-    } else if (this.inAs.includes("in days")) {
-      return pluralize(value / 1e3 / 60 / 60 / 24, "days");
-    } else if (this.inAs.includes("in hours")) {
-      return pluralize(value / 1e3 / 60 / 60, "hours");
-    } else if (this.inAs.includes("in minutes")) {
-      return pluralize(value / 1e3 / 60, "minutes");
-    } else if (this.inAs.includes("in seconds")) {
-      return pluralize(value / 1e3, "seconds");
-    } else if (this.inAs.includes("in milliseconds")) {
-      return `${value} millisecond${value === 1 ? "" : "s"}`;
-    } else if (this.inAs.includes("in weeks")) {
-      return pluralize(value / 1e3 / 60 / 60 / 24 / 7, "weeks");
-    } else if (this.inAs.includes("as date")) {
-      return this.unixToReadable(value);
-    } else {
-      if (value >= 31536e6 * 2) {
-        return this.unixToReadable(value);
-      } else {
-        const unitMap = [
-          { threshold: 31536e6, unit: "years", divisor: 31536e6 },
-          { threshold: 6048e5, unit: "weeks", divisor: 6048e5 },
-          { threshold: 864e5, unit: "days", divisor: 864e5 },
-          { threshold: 36e5, unit: "hours", divisor: 36e5 },
-          { threshold: 6e4, unit: "minutes", divisor: 6e4 },
-          { threshold: 1e3, unit: "seconds", divisor: 1e3 },
-          { threshold: 0, unit: "milliseconds", divisor: 1 }
-        ];
-        const absoluteValue = Math.abs(value);
-        const result = unitMap.find((u) => absoluteValue >= u.threshold);
-        const formattedValue = result ? pluralize(absoluteValue / result.divisor, result.unit) : `${absoluteValue} milliseconds`;
-        return value < 0 ? `-${formattedValue}` : formattedValue;
-      }
-    }
   }
 };
 
