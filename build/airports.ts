@@ -1,5 +1,5 @@
-import items from '../../data-source/airport-data-js/data/airports.json' with {type: 'json'}
-import {loopTimezones} from '../utils.ts'
+import items from '../data-source/airport-data-js/data/airports.json' with {type: 'json'}
+import {loopTimezones} from './utils/utils.ts'
 
 loopTimezones(items as unknown as any, ({store, item}) => {
   const {iata, time} = item

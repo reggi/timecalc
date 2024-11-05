@@ -1,5 +1,4 @@
 import {DateTime} from 'luxon'
-import ms from 'ms'
 
 const fixUnit = (alias: string[], divisor: number) => ({alias, divisor})
 
@@ -105,7 +104,7 @@ function unixToReadable(results, timezone) {
   return `${date.toLocaleString(DateTime.DATETIME_MED)} (${date.zoneName})`
 }
 
-export function formatResolveDate(value: number, tags: string[] | string = [], timezone?: string): string {
+export function formatMs(value: number, tags: string[] | string = [], timezone?: string): string {
   tags = Array.isArray(tags) ? tags : [tags]
   const tag = resolveAliasTags(tags)
   if (!tag && value >= units.year.divisor * 30) {

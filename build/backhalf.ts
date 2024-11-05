@@ -1,5 +1,5 @@
 import moment from 'moment-timezone'
-import {loopTimezones} from '../utils.ts'
+import {loopTimezones} from './utils/utils.ts'
 
 loopTimezones(moment.tz.names(), ({store, item}) => {
   if (item.includes('/')) {

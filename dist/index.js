@@ -1,6 +1,3 @@
-// src/timecalc.ts
-import { DateTime as DateTime4 } from "luxon";
-
 // src/evaluate.ts
 var parseFraction = (input) => {
   const parts = input.split("/");
@@ -16,15 +13,12 @@ var parseNumber = (input) => {
   }
   throw new Error(`Invalid input: ${input}`);
 };
-function evaluateExpression(expression, transform = parseNumber) {
+function evaluate(expression, transform = parseNumber) {
   expression = expression.replace(/\s+/g, " ");
   const operatorRegex = /[\+\-\*\/\%]/;
   const parenthesesRegex = /\(([^()]+)\)/;
   while (parenthesesRegex.test(expression)) {
-    expression = expression.replace(
-      parenthesesRegex,
-      (match, subExpression) => evaluateExpression(subExpression, transform)
-    );
+    expression = expression.replace(parenthesesRegex, (match, subExpression) => evaluate(subExpression, transform));
   }
   const applyOperation = (a, op, b) => {
     switch (op) {
@@ -80,8 +74,112 @@ function evaluateExpression(expression, transform = parseNumber) {
   return tokens.length === 1 ? tokens[0] : NaN;
 }
 
-// src/parser.ts
-import { DateTime as DateTime3 } from "luxon";
+// src/format-ms.ts
+import { DateTime } from "luxon";
+var fixUnit = (alias, divisor) => ({ alias, divisor });
+var year = 1e3 * 60 * 60 * 24 * 365.25;
+var units = {
+  year: fixUnit(["y", "year", "years"], 1e3 * 60 * 60 * 24 * 365.25),
+  // Adjusted for leap year
+  month: fixUnit(["mo", "mth", "mths", "month", "months"], year / 12),
+  // Average month length considering leap years
+  week: fixUnit(["w", "week", "weeks"], 1e3 * 60 * 60 * 24 * 7),
+  day: fixUnit(["d", "day", "days"], 1e3 * 60 * 60 * 24),
+  hour: fixUnit(["h", "hour", "hours"], 1e3 * 60 * 60),
+  minute: fixUnit(["m", "minute", "minutes"], 1e3 * 60),
+  second: fixUnit(["s", "second", "seconds"], 1e3),
+  millisecond: fixUnit(["ms", "millisecond", "milliseconds"], 1)
+};
+function pluralize(value, unit) {
+  const isSingular = value === 1;
+  const correctUnit = isSingular ? unit.replace(/s$/, "") : unit.endsWith("s") ? unit : unit + "s";
+  return correctUnit;
+}
+function resolveSignularAlias(unit) {
+  unit = unit.toLowerCase();
+  const unitChunks = unit.split(" ");
+  for (const unitOption in units) {
+    if (unitChunks.some((chunk) => units[unitOption].alias.map((alias) => alias.toLowerCase()).includes(chunk))) {
+      return unitOption;
+    }
+  }
+  throw new Error(`Unknown unit: ${unit}`);
+}
+function resolveAliasTags(tags) {
+  for (const unitOption in units) {
+    for (const tag of tags) {
+      try {
+        const candidateUnit = resolveSignularAlias(tag);
+        if (candidateUnit === unitOption) {
+          return candidateUnit;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+  }
+  return void 0;
+}
+function resolve(value, unit) {
+  const absValue = Math.abs(value);
+  if (unit && units[unit]) {
+    const divisor = units[unit].divisor;
+    const result = value / divisor;
+    const word = pluralize(result, unit);
+    return { result, word, divisor };
+  } else {
+    for (const unitOption in units) {
+      const divisor = units[unitOption].divisor;
+      if (absValue >= divisor) {
+        const result = value / divisor;
+        const word = pluralize(result, unitOption);
+        return { result, word, divisor };
+      }
+    }
+  }
+  return { result: value, word: "milliseconds", divisor: 1 };
+}
+function formatResolve(value, unit) {
+  let results = [];
+  let remainder = value;
+  do {
+    const resolved = resolve(remainder, unit);
+    const resultWithoutRemainder = Math.floor(resolved.result);
+    results.push({
+      result: resultWithoutRemainder,
+      word: pluralize(resultWithoutRemainder, resolved.word),
+      divisor: resolved.divisor
+    });
+    remainder = remainder % resolved.divisor;
+    unit = void 0;
+  } while (remainder > 0);
+  return results;
+}
+function formatResolveHuman(value, unit) {
+  const results = formatResolve(value, unit);
+  return results.filter((r) => r.result !== 0).map((r) => [r.result, r.word].join(" ")).join(", ");
+}
+function unixToReadable(results, timezone) {
+  let date = DateTime.fromMillis(results);
+  if (timezone) {
+    date = date.setZone(timezone, { keepLocalTime: false });
+  }
+  return `${date.toLocaleString(DateTime.DATETIME_MED)} (${date.zoneName})`;
+}
+function formatMs(value, tags = [], timezone) {
+  tags = Array.isArray(tags) ? tags : [tags];
+  const tag = resolveAliasTags(tags);
+  if (!tag && value >= units.year.divisor * 30) {
+    return unixToReadable(value, timezone);
+  }
+  return formatResolveHuman(value, tag);
+}
+
+// src/parse-date.ts
+import { DateTime as DateTime2 } from "luxon";
+import ms from "ms";
+import * as chrono from "chrono-node";
+import wordsToNumbers from "words-to-numbers";
 
 // data/merge.json
 var merge_default = {
@@ -16023,7 +16121,7 @@ var merge_default = {
   hdt: "UTC-09:30"
 };
 
-// src/timezone.ts
+// src/parse-timezone.ts
 function removeSubstringV2(raw, substring, index) {
   return raw.substring(0, index) + raw.substring(index + substring.length).trim();
 }
@@ -16056,114 +16154,7 @@ function parseTimezoneV3(raw) {
 }
 var parseTimezone = parseTimezoneV3;
 
-// src/parser-handlers.ts
-import ms from "ms";
-import * as chrono from "chrono-node";
-import { DateTime as DateTime2 } from "luxon";
-import wordsToNumbers from "words-to-numbers";
-
-// src/format-resolve.ts
-import { DateTime } from "luxon";
-var fixUnit = (alias, divisor) => ({ alias, divisor });
-var year = 1e3 * 60 * 60 * 24 * 365.25;
-var units = {
-  year: fixUnit(["y", "year", "years"], 1e3 * 60 * 60 * 24 * 365.25),
-  // Adjusted for leap year
-  month: fixUnit(["mo", "mth", "mths", "month", "months"], year / 12),
-  // Average month length considering leap years
-  week: fixUnit(["w", "week", "weeks"], 1e3 * 60 * 60 * 24 * 7),
-  day: fixUnit(["d", "day", "days"], 1e3 * 60 * 60 * 24),
-  hour: fixUnit(["h", "hour", "hours"], 1e3 * 60 * 60),
-  minute: fixUnit(["m", "minute", "minutes"], 1e3 * 60),
-  second: fixUnit(["s", "second", "seconds"], 1e3),
-  millisecond: fixUnit(["ms", "millisecond", "milliseconds"], 1)
-};
-function pluralize(value, unit) {
-  const isSingular = value === 1;
-  const correctUnit = isSingular ? unit.replace(/s$/, "") : unit.endsWith("s") ? unit : unit + "s";
-  return correctUnit;
-}
-function resolveSignularAlias(unit) {
-  unit = unit.toLowerCase();
-  const unitChunks = unit.split(" ");
-  for (const unitOption in units) {
-    if (unitChunks.some((chunk) => units[unitOption].alias.map((alias) => alias.toLowerCase()).includes(chunk))) {
-      return unitOption;
-    }
-  }
-  throw new Error(`Unknown unit: ${unit}`);
-}
-function resolveAliasTags(tags) {
-  for (const unitOption in units) {
-    for (const tag of tags) {
-      try {
-        const candidateUnit = resolveSignularAlias(tag);
-        if (candidateUnit === unitOption) {
-          return candidateUnit;
-        }
-      } catch (e) {
-        continue;
-      }
-    }
-  }
-  return void 0;
-}
-function resolve(value, unit) {
-  const absValue = Math.abs(value);
-  if (unit && units[unit]) {
-    const divisor = units[unit].divisor;
-    const result = value / divisor;
-    const word = pluralize(result, unit);
-    return { result, word, divisor };
-  } else {
-    for (const unitOption in units) {
-      const divisor = units[unitOption].divisor;
-      if (absValue >= divisor) {
-        const result = value / divisor;
-        const word = pluralize(result, unitOption);
-        return { result, word, divisor };
-      }
-    }
-  }
-  return { result: value, word: "milliseconds", divisor: 1 };
-}
-function formatResolve(value, unit) {
-  let results = [];
-  let remainder = value;
-  do {
-    const resolved = resolve(remainder, unit);
-    const resultWithoutRemainder = Math.floor(resolved.result);
-    results.push({
-      result: resultWithoutRemainder,
-      word: pluralize(resultWithoutRemainder, resolved.word),
-      divisor: resolved.divisor
-    });
-    remainder = remainder % resolved.divisor;
-    unit = void 0;
-  } while (remainder > 0);
-  return results;
-}
-function formatResolveHuman(value, unit) {
-  const results = formatResolve(value, unit);
-  return results.filter((r) => r.result !== 0).map((r) => [r.result, r.word].join(" ")).join(", ");
-}
-function unixToReadable(results, timezone) {
-  let date = DateTime.fromMillis(results);
-  if (timezone) {
-    date = date.setZone(timezone, { keepLocalTime: false });
-  }
-  return `${date.toLocaleString(DateTime.DATETIME_MED)} (${date.zoneName})`;
-}
-function formatResolveDate(value, tags = [], timezone) {
-  tags = Array.isArray(tags) ? tags : [tags];
-  const tag = resolveAliasTags(tags);
-  if (!tag && value >= units.year.divisor * 30) {
-    return unixToReadable(value, timezone);
-  }
-  return formatResolveHuman(value, tag);
-}
-
-// src/parser-handlers.ts
+// src/parse-date.ts
 function handleNow(v, runtime) {
   if (v === "now") {
     return runtime;
@@ -16199,11 +16190,8 @@ function handleWords(value) {
   }
   throw new Error("Invalid words input");
 }
-var stack = [handleMs, handleNow, handleWords, handleChrono];
-
-// src/parser.ts
 function tryFunctionsUntilSuccess(functions) {
-  return (value, runtime = DateTime3.now()) => {
+  return (value, runtime = DateTime2.now()) => {
     for (const func of functions) {
       try {
         return func(value, runtime);
@@ -16214,7 +16202,7 @@ function tryFunctionsUntilSuccess(functions) {
   };
 }
 function formatDateTime({ timezone, format, input }) {
-  let parsedDateTime = DateTime3.fromFormat(input, format).setZone(timezone, { keepLocalTime: true });
+  let parsedDateTime = DateTime2.fromFormat(input, format).setZone(timezone, { keepLocalTime: true });
   if (!parsedDateTime.isValid) {
     throw new Error("Invalid date format or input");
   } else {
@@ -16230,7 +16218,7 @@ function parseTimeWithTimezone(format) {
     return formatDateTime({ format, input: value, timezone: timezone || runtime.zoneName });
   };
 }
-var parseStringValue = tryFunctionsUntilSuccess([
+var parseDate2 = tryFunctionsUntilSuccess([
   parseTimeWithTimezone("h:mma"),
   // 3:30pm
   parseTimeWithTimezone("h:mm a"),
@@ -16259,16 +16247,20 @@ var parseStringValue = tryFunctionsUntilSuccess([
   // 3 pm est
   parseTimeWithTimezone("zz"),
   //est
-  ...stack
+  handleMs,
+  handleNow,
+  handleWords,
+  handleChrono
 ]);
 
 // src/timecalc.ts
-var TimeCalc = class _TimeCalc {
+import { DateTime as DateTime3 } from "luxon";
+var TimeCalc = class {
   constructor(timezone, log) {
     this.timezone = timezone;
     this.log = log;
     this.parser = this.parser.bind(this);
-    this.relativity = DateTime4.now().setZone(timezone);
+    this.relativity = DateTime3.now().setZone(timezone);
   }
   hasDateTime = false;
   values = [];
@@ -16277,59 +16269,48 @@ var TimeCalc = class _TimeCalc {
   operandStack = [];
   relativity;
   /** handles each operand in the evaluation (must resolve to int) */
-  parser(value) {
-    try {
-      this.operandStack.push(value);
-      if (typeof value === "number") return value;
-      let result = parseStringValue(value.trim(), this.relativity);
-      if (DateTime4.isDateTime(result)) {
-        if (this.operandStack.length === 1 && result.zoneName) {
-          const ogzone = this.timezone;
-          this.timezone = result.zoneName;
-          result = result.setZone(ogzone, { keepLocalTime: false });
-          result = result.setZone(this.timezone, { keepLocalTime: false });
+  parser(parseStringValue) {
+    return (value) => {
+      try {
+        this.operandStack.push(value);
+        if (typeof value === "number") return value;
+        let result = parseStringValue(value.trim(), this.relativity);
+        if (DateTime3.isDateTime(result)) {
+          if (this.operandStack.length === 1 && result.zoneName) {
+            const ogzone = this.timezone;
+            this.timezone = result.zoneName;
+            result = result.setZone(ogzone, { keepLocalTime: false });
+            result = result.setZone(this.timezone, { keepLocalTime: false });
+          }
+          this.hasDateTime = true;
+          return result.toMillis();
         }
-        this.hasDateTime = true;
-        return result.toMillis();
+        return result;
+      } catch (e) {
+        this.tags.push(value);
+        return 0;
       }
-      return result;
-    } catch (e) {
-      this.tags.push(value);
-      return 0;
-    }
-  }
-  evaluate(value) {
-    const e = evaluateExpression(value, this.parser);
-    if (this.hasDateTime) {
-      if (this.tags.length) {
-        const now = DateTime4.now();
-        const evaluated = DateTime4.fromMillis(e);
-        const differenceInMilliseconds = evaluated.diff(now, "milliseconds").milliseconds;
-        return this.resolveIn(differenceInMilliseconds);
-      }
-      return this.resolveIn(e);
-    }
-    return this.resolveIn(e);
-  }
-  resolveIn(e) {
-    return formatResolveDate(e, this.tags, this.timezone);
-  }
-  static evaluate(timezone, expression) {
-    const pv = new _TimeCalc(timezone);
-    return pv.evaluate(expression);
-  }
-  static evaluateTimezone(timezone) {
-    return (expression) => {
-      const pv = new _TimeCalc(timezone);
-      return pv.evaluate(expression);
     };
+  }
+  postEvaluate(e) {
+    if (typeof e === "number" && this.hasDateTime && this.tags.length) {
+      const now = DateTime3.now();
+      const evaluated = DateTime3.fromMillis(e);
+      const differenceInMilliseconds = evaluated.diff(now, "milliseconds").milliseconds;
+      return differenceInMilliseconds;
+    }
+    return e;
   }
 };
 
 // src/index.ts
 function timecalc(timezone, expression) {
   try {
-    return { error: null, results: TimeCalc.evaluate(timezone, expression) };
+    const calc = new TimeCalc(timezone);
+    let evaluated = evaluate(expression, calc.parser(parseDate2));
+    evaluated = calc.postEvaluate(evaluated);
+    const results = formatMs(evaluated, calc.tags, calc.timezone);
+    return { error: null, results };
   } catch (e) {
     return { error: e.message, results: null };
   }

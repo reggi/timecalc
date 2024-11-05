@@ -1,6 +1,49 @@
 import {DateTime} from 'luxon'
-import {parseTimezone, stringToTimezone} from './timezone.ts'
-import {stack} from './parser-handlers.ts'
+import ms from 'ms'
+import * as chrono from 'chrono-node'
+import wordsToNumbers from 'words-to-numbers'
+import {parseTimezone} from './parse-timezone.ts'
+import {units} from './format-ms.ts'
+
+function handleNow(v, runtime) {
+  if (v === 'now') {
+    return runtime
+  }
+  throw new Error('Invalid now input')
+}
+
+function handleChrono(v) {
+  const value = chrono.parseDate(v)
+  if (value) {
+    return DateTime.fromJSDate(value)
+  }
+  throw new Error('Invalid chrono input')
+}
+
+function handleMs(value) {
+  const v = ms(value)
+  if (v) {
+    return v
+  }
+  const monthRegex = /^(?:\d+\s*(?:mo|month|months|mths|mth))$/i
+  if (monthRegex.test(value)) {
+    const number = parseInt(value, 10)
+    return number * units.month.divisor
+  }
+  throw new Error('Invalid ms input')
+}
+
+function handleWords(value) {
+  // remove the last word from the string
+  const words = value.split(' ')
+  const id = words.pop()
+  const rest = words.join(' ')
+  const number = wordsToNumbers(rest)
+  if (number) {
+    return handleMs(`${number} ${id}`)
+  }
+  throw new Error('Invalid words input')
+}
 
 function tryFunctionsUntilSuccess(functions) {
   return (value: string, runtime: DateTime = DateTime.now()) => {
@@ -34,7 +77,7 @@ function parseTimeWithTimezone(format) {
   }
 }
 
-export const parseStringValue = tryFunctionsUntilSuccess([
+export const parseDate = tryFunctionsUntilSuccess([
   parseTimeWithTimezone('h:mma'), // 3:30pm
   parseTimeWithTimezone('h:mm a'), // 3:30 pm
   parseTimeWithTimezone('h:mma z'), // 3:30pm est
@@ -49,5 +92,8 @@ export const parseStringValue = tryFunctionsUntilSuccess([
   parseTimeWithTimezone('ha zz'), // 3pm est
   parseTimeWithTimezone('h a zz'), // 3 pm est
   parseTimeWithTimezone('zz'), //est
-  ...stack,
+  handleMs,
+  handleNow,
+  handleWords,
+  handleChrono,
 ])

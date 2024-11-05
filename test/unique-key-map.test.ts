@@ -1,4 +1,4 @@
-import {UniqueKeyMap} from '../src/unique-key-map.ts'
+import {UniqueKeyMap} from '../build/utils/unique-key-map.ts'
 import {test} from 'node:test'
 import assert from 'node:assert'
 

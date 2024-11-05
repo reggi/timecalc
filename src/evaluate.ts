@@ -14,7 +14,7 @@ const parseNumber = input => {
   throw new Error(`Invalid input: ${input}`)
 }
 
-export function evaluateExpression(expression, transform = parseNumber) {
+export function evaluate(expression, transform = parseNumber): number {
   // Handle parentheses first and ensure spaces are managed correctly around operators
   expression = expression.replace(/\s+/g, ' ')
   const operatorRegex = /[\+\-\*\/\%]/
@@ -22,9 +22,7 @@ export function evaluateExpression(expression, transform = parseNumber) {
 
   // Evaluate any expressions within parentheses
   while (parenthesesRegex.test(expression)) {
-    expression = expression.replace(parenthesesRegex, (match, subExpression) =>
-      evaluateExpression(subExpression, transform),
-    )
+    expression = expression.replace(parenthesesRegex, (match, subExpression) => evaluate(subExpression, transform))
   }
 
   // Function to apply an operator to two operands

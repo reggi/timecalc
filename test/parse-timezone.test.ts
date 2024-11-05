@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {parseTimezone, stringToTimezone} from '../src/timezone.ts'
+import {parseTimezone, stringToTimezone} from '../src/parse-timezone.ts'
 import test from 'node:test'
 
 test('stringToTimezone', () => {

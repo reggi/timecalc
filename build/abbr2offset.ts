@@ -1,5 +1,5 @@
 import moment from 'moment-timezone'
-import {loopTimezones} from '../utils.ts'
+import {loopTimezones} from './utils/utils.ts'
 
 // Function to format offset in UTC±HH:mm format, rounding to the nearest minute
 function formatOffset(offset) {
@@ -14,6 +14,8 @@ function formatOffset(offset) {
 function getTimeZoneDetails(zone) {
   const zoneData = moment.tz.zone(zone)
   const details = {} // Use an object to map abbr to offset
+
+  if (!zoneData) return
 
   zoneData.untils.forEach((until, index) => {
     const abbr = zoneData.abbrs[index]
