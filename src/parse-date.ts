@@ -20,10 +20,10 @@ function handleChrono(v, runtime: DateTime) {
       hour: runtime.hour,
       minute: runtime.minute,
       second: runtime.second,
-      millisecond: runtime.millisecond
+      millisecond: runtime.millisecond,
     })
     if (runtime.zoneName) {
-      return dateTime.setZone(runtime.zoneName, { keepLocalTime: false })
+      return dateTime.setZone(runtime.zoneName, {keepLocalTime: false})
     }
     return dateTime
   }
