@@ -177,12 +177,13 @@ function resolve(value, unit) {
 }
 function formatResolve(value, unit) {
   let results = [];
-  let remainder = value;
+  let remainder = Math.abs(value);
+  const isNegative = value < 0;
   do {
     const resolved = resolve(remainder, unit);
     const resultWithoutRemainder = Math.floor(resolved.result);
     results.push({
-      result: resultWithoutRemainder,
+      result: isNegative ? -resultWithoutRemainder : resultWithoutRemainder,
       word: pluralize(resultWithoutRemainder, resolved.word),
       divisor: resolved.divisor
     });
@@ -16197,10 +16198,20 @@ function handleNow(v, runtime) {
   }
   throw new Error("Invalid now input");
 }
-function handleChrono(v) {
+function handleChrono(v, runtime) {
   const value = chrono.parseDate(v);
   if (value) {
-    return import_luxon2.DateTime.fromJSDate(value);
+    let dateTime = import_luxon2.DateTime.fromJSDate(value);
+    dateTime = dateTime.set({
+      hour: runtime.hour,
+      minute: runtime.minute,
+      second: runtime.second,
+      millisecond: runtime.millisecond
+    });
+    if (runtime.zoneName) {
+      return dateTime.setZone(runtime.zoneName, { keepLocalTime: false });
+    }
+    return dateTime;
   }
   throw new Error("Invalid chrono input");
 }

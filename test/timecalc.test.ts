@@ -25,4 +25,6 @@ test('timecalc', () => {
   assertIncludes(timecalc('5pm sfo - 5pm jfk + 1 hour'), '4 hours')
   assertIncludes(timecalc('1y + 1y'), '2 years')
   assertIncludes(timecalc('2 y + 3w + 21h + 1m - 45ms'), '2 years, 3 weeks, 21 hours, 59 seconds, 955 milliseconds')
+  assertIncludes(timecalc('now - tomorrow'), '-1 day')
+  assertIncludes(timecalc('tomorrow - now'), '1 day')
 })

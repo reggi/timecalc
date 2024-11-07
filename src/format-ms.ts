@@ -73,12 +73,13 @@ export function resolve(value: number, unit?: string) {
 
 export function formatResolve(value: number, unit?: string): any[] {
   let results: {result: number; word: string; divisor: number}[] = []
-  let remainder = value
+  let remainder = Math.abs(value)
+  const isNegative = value < 0
   do {
     const resolved = resolve(remainder, unit)
     const resultWithoutRemainder = Math.floor(resolved.result)
     results.push({
-      result: resultWithoutRemainder,
+      result: isNegative ? -resultWithoutRemainder : resultWithoutRemainder,
       word: pluralize(resultWithoutRemainder, resolved.word),
       divisor: resolved.divisor,
     })

@@ -20,6 +20,7 @@
     "src"
   ],
   "scripts": {
+    "watch": "npm run build -- --watch",
     "build": "tsup ./src/index.ts --format esm,cjs --dts",
     "build:abbr2offset": "tsx ./build/abbr2offset.ts > ./data/abbr2offset.json",
     "build:airports": "tsx ./build/airports.ts > ./data/airports.json",

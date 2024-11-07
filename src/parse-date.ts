@@ -12,10 +12,20 @@ function handleNow(v, runtime) {
   throw new Error('Invalid now input')
 }
 
-function handleChrono(v) {
+function handleChrono(v, runtime: DateTime) {
   const value = chrono.parseDate(v)
   if (value) {
-    return DateTime.fromJSDate(value)
+    let dateTime = DateTime.fromJSDate(value)
+    dateTime = dateTime.set({
+      hour: runtime.hour,
+      minute: runtime.minute,
+      second: runtime.second,
+      millisecond: runtime.millisecond
+    })
+    if (runtime.zoneName) {
+      return dateTime.setZone(runtime.zoneName, { keepLocalTime: false })
+    }
+    return dateTime
   }
   throw new Error('Invalid chrono input')
 }

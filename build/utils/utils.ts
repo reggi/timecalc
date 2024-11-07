@@ -6,7 +6,7 @@ export function validTimezone(timezone: string) {
 }
 
 export function fromTimezone(timezone: string, time: DateTime) {
-  return time.setZone(timezone, {keepLocalTime: true})
+  return time.setZone(timezone, {keepLocalTime: false})
 }
 
 export function getUtcOffset(timezone: string) {
